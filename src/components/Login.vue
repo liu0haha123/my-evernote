@@ -7,7 +7,7 @@
           <div class="form">
             <h3 @click="showRegister">创建账户</h3>
             <transition name="slide">
-              <div v-bind:class="{show:isShowRegister}" class="register">
+              <div v-bind:class="{ show: isShowRegister }" class="register">
                 <input
                   type="text"
                   v-model="register.username"
@@ -27,7 +27,7 @@
             </transition>
             <h3 @click="showLogin">登录</h3>
             <transition name="slide">
-              <div class="login" v-bind:class="{show: isShowLogin}">
+              <div class="login" v-bind:class="{ show: isShowLogin }">
                 <input
                   type="text"
                   v-model="login.username"
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import request from "@/helpers/request"
 
 export default {
   data () {
@@ -114,8 +115,12 @@ export default {
       }
       this.login.isError = false
       this.login.notice = ''
-      console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
-
+      /*
+      request("/auth/login", "POST", { username: "hunger", password: "123456" }).then(
+        data => {
+          console.log(data);
+        }
+      )*/
     },
     validUsername (username) {
       return {
@@ -202,7 +207,7 @@ export default {
       overflow: hidden;
       transition: height 0.4s;
 
-      &.show{
+      &.show {
         height: 193px;
       }
       input {
