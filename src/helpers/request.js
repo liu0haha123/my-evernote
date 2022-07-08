@@ -1,7 +1,7 @@
 import axios from "axios"
 // 配置通用参数
 axios.defaults.headers.post["Content-Type"] = 'application/x-www-form-urlencoded'
-axios.defaults.baseURL = "//note-server.hunger-valley.com"
+axios.defaults.baseURL = process.env.VUE_APP_BASEURL
 axios.defaults.withCredentials = true
 export default function request (url, type = "GET", data = {}) {
     return new Promise((resolve, reject) => {
@@ -25,8 +25,7 @@ export default function request (url, type = "GET", data = {}) {
                 reject(res.data)
             }
         }).catch(err => {
-            console.error(err);
-            reject({msg:"网络异常,请检查网络"})
+            reject({ msg: err.response.data.msg })
         })
     })
 }
