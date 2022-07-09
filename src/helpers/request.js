@@ -1,4 +1,5 @@
 import axios from "axios"
+import {Message} from "element-ui"
 // 配置通用参数
 axios.defaults.headers.post["Content-Type"] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL = process.env.VUE_APP_BASEURL
@@ -21,10 +22,12 @@ export default function request (url, type = "GET", data = {}) {
             if (res.status === 200) {
                 resolve(res.data)
             } else {
-                console.error(res.data)
+                Message.error(res.data.msg)
                 reject(res.data)
             }
         }).catch(err => {
+            console.log(111111);
+            Message.error(err.response.data.msg)
             reject({ msg: err.response.data.msg })
         })
     })
