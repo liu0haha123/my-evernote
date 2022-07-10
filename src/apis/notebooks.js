@@ -22,7 +22,6 @@ export default {
                 reject(err)
             })
         })
-
     },
     updateNotebook (notebookId, { title = "" } = { title: "" }) {
         return request(URL.UPDATE.replace(":id", notebookId), "PATCH", { title })

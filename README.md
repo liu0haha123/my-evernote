@@ -1,5 +1,7 @@
 # evernote-client
 
+## 测试用账号密码
+LLLLWWWW 123456
 ## Project setup
 ```
 yarn install
