@@ -36,6 +36,8 @@
 <script>
 import Notebooks from '@/apis/notebooks';
 import Notes from "@/apis/notes"
+window.Notes = Notes
+
 export default {
   created () {
     Notebooks.getAll().then(res => {
@@ -44,8 +46,12 @@ export default {
       return Notes.getAll({ notebookId: this.curBook.id })
     }).then(res => {
       this.notes = res.data
+      this.$emit("update:notes", this.notes)
     })
   },
+  props: [
+    "curNote"
+  ],
   data () {
     return {
       notebooks: [],

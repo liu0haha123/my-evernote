@@ -1,18 +1,18 @@
 <template>
   <div id="note" class="detail">
-    <note-sidebar @update:notes="val=>notes = val"></note-sidebar>
+    <note-sidebar @update:notes="val => notes = val"></note-sidebar>
     <div class="note-detail">
       <div class="note-empty" v-show="false"></div>
       <div class="note-detail-ct" v-show="true">
         <div class="note-bar">
           <span> 创建日期: {{ curNote.createdAtFriendly }}</span>
           <span> 更新日期: {{ curNote.updatedAtFriendly }}</span>
-          <span> {{ curNote.statusText }}</span>
+          <span> {{ statusText }}</span>
           <span class="iconfont icon-delete"></span>
           <span class="iconfont icon-fullscreen"></span>
         </div>
         <div class="note-title">
-          <input type="text" placeholder="输入标题" :value="curNote.title" />
+          <input type="text" placeholder="输入标题" v-model="curNote.title" />
         </div>
         <div class="editor">
           <textarea
@@ -20,11 +20,7 @@
             :value="curNote.content"
             v-show="true"
           ></textarea>
-          <div
-            class="preview markdown-body"
-            v-html=""
-            v-show="false"
-          ></div>
+          <div class="preview markdown-body" v-html="" v-show="false"></div>
         </div>
       </div>
     </div>
@@ -35,20 +31,14 @@
 import Auth from "@/apis/auth"
 import NoteSidebar from "@/components/NoteSidebar"
 export default {
-  name: "NoteDetail",
   components: {
     NoteSidebar
   },
   data () {
     return {
-      curNote: {
-        title: "123",
-        content: "456",
-        createdAtFriendly: "刚刚",
-        updatedAtFriendly: "刚刚",
-        statusText: "未保存"
-      },
-      notes:{}
+      curNote: {},
+      notes: [],
+      statusText: ""
     }
   },
   created () {
@@ -57,6 +47,10 @@ export default {
         this.$router.push({ path: "/login" })
       }
     })
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.curNote = this.notes.find(note => { return note.id == to.query.noteId }) || {}
+    next()
   }
 }
 </script>
