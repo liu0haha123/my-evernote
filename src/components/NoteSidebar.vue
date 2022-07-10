@@ -36,8 +36,7 @@
 <script>
 import Notebooks from '@/apis/notebooks';
 import Notes from "@/apis/notes"
-window.Notes = Notes
-
+import Bus from "@/helpers/bus"
 export default {
   created () {
     Notebooks.getAll().then(res => {
@@ -47,6 +46,7 @@ export default {
     }).then(res => {
       this.notes = res.data
       this.$emit("update:notes", this.notes)
+      Bus.$emit("update:notes", this.notes)
     })
   },
   props: [

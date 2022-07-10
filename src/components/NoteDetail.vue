@@ -2,8 +2,8 @@
   <div id="note" class="detail">
     <note-sidebar @update:notes="val => notes = val"></note-sidebar>
     <div class="note-detail">
-      <div class="note-empty" v-show="false"></div>
-      <div class="note-detail-ct" v-show="true">
+      <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+      <div class="note-detail-ct" v-show="curNote.id">
         <div class="note-bar">
           <span> 创建日期: {{ curNote.createdAtFriendly }}</span>
           <span> 更新日期: {{ curNote.updatedAtFriendly }}</span>
@@ -30,6 +30,10 @@
 <script>
 import Auth from "@/apis/auth"
 import NoteSidebar from "@/components/NoteSidebar"
+import Bus from "@/helpers/bus"
+// 测试专用代码开始
+
+// 测试专用代码结束
 export default {
   components: {
     NoteSidebar
@@ -46,6 +50,9 @@ export default {
       if (!res.isLogin) {
         this.$router.push({ path: "/login" })
       }
+    })
+    Bus.$once("update:notes", val => {
+      this.curNote = val.find(note => { return note.id == this.$route.query.noteId }) || {}
     })
   },
   beforeRouteUpdate (to, from, next) {
