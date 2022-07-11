@@ -26,7 +26,6 @@ export default function request (url, type = "GET", data = {}) {
                 reject(res.data)
             }
         }).catch(err => {
-            console.log(111111);
             Message.error(err.response.data.msg)
             reject({ msg: err.response.data.msg })
         })
