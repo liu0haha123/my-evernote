@@ -8,9 +8,9 @@ const URL = {
 }
 
 export default {
-    getAll ({ notebookId }) {
+    getAll () {
         return new Promise((resolve, reject) => {
-            request(URL.GET.replace(":notebookId", notebookId)).then(res => {
+            request(URL.GET).then(res => {
                 res.data = res.data.map(note => {
                     note.createdAtFriendly = friendlyDate(note.createdAt)
                     note.updatedAtFriendly = friendlyDate(note.updatedAt)

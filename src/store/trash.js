@@ -1,53 +1,57 @@
-import Note from "@/apis/notes"
-import Notebook from "@/apis/notebooks"
+import Trash from "@/apis/trash"
 import { Message } from "element-ui"
 
 const trash = {
     state: {
+        trashNotes: null,
+        curTrashNoteId: null
     },
     getters: {
+        trashNotes: state => state.trashNotes || [],
+        curTrashNote: (state, getters) => {
+            if (!state.curTrashNoteId) return getters.trashNotes[0] || {}
+            return state.trashNotes.find(note => note.id == state.curTrashNoteId) || {}
+        },
+        belongTo: (state, getters, rootState, rootGetters) => {
+            let notebook = rootGetters.notebooks.find(notebook => notebook.id == getters.curTrashNote.notebookId) || {}
+            return notebook.title || ''
+        }
     },
     mutations: {
-        setNote (state, payload) {
-            state.notes = payload.notes
+        setTrashNotes (state, payload) {
+            state.trashNotes = payload.trashNotes
         },
-        addNote (state, payload) {
-            state.notes.unshift(payload.note)
+        addTrashNote (state, payload) {
+            state.trashNotes.unshift(payload.note)
         },
-        updateNote (state, payload) {
-            let note = state.notes.find(note => note.id === payload.noteId) || {}
-            note.title = payload.title
-            note.content = payload.content
+        deleteTrashNote (state, payload) {
+            state.trashNotes = state.trashNotes.filter(note => note.id != payload.noteId)
         },
-        deleteNote (state, payload) {
-            state.notes = state.notes.filter(note => note.id !== payload.noteId)
-        },
-        setCurNote (state, payload) {
-            state.curNoteId = payload.curNoteId
+        setCurTrashNote (state, payload) {
+            state.curTrashNoteId = payload.curTrashNoteId
         }
     },
 
     actions: {
-        getNotes ({ commit }, { notebookId }) {
-            return Note.getAll({ notebookId }).then(res => {
-                commit("setNote", { notes: res.data })
+        getTrashNotes ({ commit }) {
+            return Trash.getAll().then(res => {
+                commit("setTrashNotes", { trashNotes: res.data })
             })
         },
-        addNote ({ commit }, { notebookId, title, content }) {
-            return Note.addNote({ notebookId }, { title, content }).then(res => {
-                commit("addNote", { note: res.data })
-            })
+        deleteTrashNote ({ commit }, { noteId }) {
+            return Trash.deleteNote({ noteId })
+                .then(res => {
+                    commit('deleteTrashNote', { noteId })
+                    Message.success(res.msg)
+                })
         },
-        updateNote ({ commit }, { noteId, title, content }) {
-            return Note.updateNote({ noteId }, { title, content }).then(res => {
-                commit("updateNote", { noteId, title, content })
-            })
-        },
-        deleteNote ({ commit }, { noteId }) {
-            return Note.deleteNote({ noteId }).then(res => {
-                commit("deleteNote", { noteId })
-                Message.success(res.msg)
-            })
+
+        revertTrashNote ({ commit }, { noteId }) {
+            return Trash.revertNote({ noteId })
+                .then(res => {
+                    commit('deleteTrashNote', { noteId })
+                    Message.success(res.msg)
+                })
         }
     }
 }

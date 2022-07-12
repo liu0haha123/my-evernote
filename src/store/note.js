@@ -23,12 +23,12 @@ const notebooks = {
             state.notes.unshift(payload.note)
         },
         updateNote (state, payload) {
-            let note = state.notes.find(note => note.id === payload.noteId) || {}
+            let note = state.notes.find(note => note.id == payload.noteId) || {}
             note.title = payload.title
             note.content = payload.content
         },
         deleteNote (state, payload) {
-            state.notes = state.notes.filter(note => note.id !== payload.noteId)
+            state.notes = state.notes.filter(note => note.id != payload.noteId)
         },
         setCurNote (state, payload) {
             state.curNoteId = payload.curNoteId
