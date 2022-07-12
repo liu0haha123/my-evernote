@@ -41,15 +41,8 @@ import { mapActions, mapState, mapGetters } from "vuex"
 export default {
   name: 'NotebookList',
   created () {
-    Auth.getInfo().then(res => {
-      if (!res.isLogin) {
-        this.$router.push({ path: "/login" })
-      }
-    })
-    // Notebooks.getAll().then(res => {
-    //   this.notebooks = res.data
-    // })
-    this.$store.dispatch("getNotebooks")
+    this.checkLogin({path:"/login"})
+    this.getNotebooks()
   },
   data () {
     return {
@@ -60,7 +53,7 @@ export default {
     ...mapGetters(["notebooks"]), // eslint-disable-line
   },
   methods: {
-    ...mapActions(["getNotebooks", "addNotebook", "updateNotebook", "deleteNotebook"]),
+    ...mapActions(["getNotebooks", "addNotebook", "updateNotebook", "deleteNotebook","checkLogin"]),
     onCreate () {
       let title = ""
       this.$prompt('输标题', '创建笔记本', {
