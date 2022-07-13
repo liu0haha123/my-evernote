@@ -2,7 +2,8 @@
   <div id="note" class="detail">
     <note-sidebar @update:notes="(val) => (notes = val)"></note-sidebar>
     <div class="note-detail">
-      <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+      <div class="note-empty" v-show="!curBook.id">请创建笔记本后</div>
+      <div class="note-empty" v-show="!curNote.id">选择或创建笔记</div>
       <div class="note-detail-ct" v-show="curNote.id">
         <div class="note-bar">
           <span> 创建日期: {{ curNote.createdAtFriendly }}</span>
@@ -61,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["notes", "curNote"]),
+    ...mapGetters(["notes", "curNote","curBook"]),
     previewContent () {
       return md.render(this.curNote.content || '')
     }
@@ -140,7 +141,7 @@ export default {
         font-size: 18px;
         cursor: pointer;
       }
-      .iconfont.red{
+      .iconfont.red {
         color: red;
       }
     }
