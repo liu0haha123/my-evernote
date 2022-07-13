@@ -33,8 +33,9 @@
     </ul>
   </div>
 </template>
+
 <script>
-import { mapActions, mapState, mapGetters, mapMutations } from "vuex"
+import { mapActions, mapGetters, mapMutations } from "vuex"
 export default {
   created () {
     this.getNotebooks().then(() => {
@@ -42,15 +43,21 @@ export default {
       return this.getNotes({ notebookId: this.curBook.id })
     }).then(() => {
       this.setCurNote({ curNoteId: this.$route.query.noteId })
+      this.$router.replace({
+        path: "/note", query: {
+          notebookId: this.curBook.id,
+          noteId: this.curNote.id
+        }
+      })
     })
   },
   computed: {
-    ...mapGetters(["notebooks", "notes", "curBook"])
+    ...mapGetters(["notebooks", "notes", "curBook", "curNote"])
   },
   methods: {
     ...mapMutations([
-        'setCurBook',
-        'setCurNote'
+      'setCurBook',
+      'setCurNote'
     ]),
     ...mapActions([
       "getNotebooks",
@@ -62,7 +69,15 @@ export default {
         return this.$router.push({ path: "/trash" })
       }
       this.$store.commit("setCurBook", { curBookId: notebookId })
-      this.getNotes({ notebookId })
+      this.getNotes({ notebookId }).then(() => {
+        this.setCurNote()
+        this.$router.replace({
+          path: "/note", query: {
+            notebookId: this.curBook.id,
+            noteId: this.curNote.id
+          }
+        })
+      })
     },
     onAddNote () {
       this.addNote({ notebookId: this.curBook.id })

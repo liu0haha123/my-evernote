@@ -24,8 +24,14 @@ const users = {
                 commit("setUser", { user: res.data })
             })
         },
+        logout ({ commit }) {
+            return Auth.logout().then(res => {
+                commit("setUser", { user: null })
+                router.push({ path: "/login" })
+            })
+        },
         checkLogin ({ commit, state }, payload) {
-            if(state.user !==null) return Promise.resolve()
+            if (state.user !== null) return Promise.resolve()
             return Auth.getInfo().then(res => {
                 if (!res.isLogin) {
                     router.push(payload)

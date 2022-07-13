@@ -18,7 +18,7 @@ const trash = {
         }
     },
     mutations: {
-        setTrashNotes (state, payload) {
+        setTrashNotes (state, payload = {}) {
             state.trashNotes = payload.trashNotes
         },
         addTrashNote (state, payload) {
@@ -27,7 +27,7 @@ const trash = {
         deleteTrashNote (state, payload) {
             state.trashNotes = state.trashNotes.filter(note => note.id != payload.noteId)
         },
-        setCurTrashNote (state, payload) {
+        setCurTrashNote (state, payload = {}) {
             state.curTrashNoteId = payload.curTrashNoteId
         }
     },

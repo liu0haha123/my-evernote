@@ -12,6 +12,7 @@
           <span
             class="iconfont icon-fullscreen"
             @click="isShowPreview = !isShowPreview"
+            :class="isShowPreview ? 'red' : ''"
           ></span>
         </div>
         <div class="note-title">
@@ -43,12 +44,11 @@
 </template>
 
 <script>
-import Auth from "@/apis/auth"
 import NoteSidebar from "@/components/NoteSidebar"
 import _ from "lodash"
 import MarkdownIt from "markdown-it"
 let md = new MarkdownIt()
-import { mapActions, mapState, mapGetters, mapMutations } from "vuex"
+import { mapActions, mapGetters, mapMutations } from "vuex"
 // 需要加一个代表预览状态的CSS
 export default {
   components: {
@@ -67,16 +67,20 @@ export default {
     }
   },
   created () {
-    this.checkLogin({path:"/login"})
+    console.log("fuck");
+    this.checkLogin({ path: "/login" })
   },
   methods: {
     ...mapMutations(["setCurNote"]),
-    ...mapActions(["updateNote", "deleteNote","checkLogin"]),
+    ...mapActions(["updateNote", "deleteNote", "checkLogin"]),
     onUpdateNote: _.debounce(function () {
+      if (!this.curNote.id) return
       this.updateNote({ noteId: this.curNote.id, title: this.curNote.title, content: this.curNote.content })
         .then(data => {
+          console.log(data);
           this.statusText = '已保存'
         }).catch(data => {
+          console.log(data);
           this.statusText = '保存出错'
         })
 
@@ -135,6 +139,9 @@ export default {
         margin-left: 4px;
         font-size: 18px;
         cursor: pointer;
+      }
+      .iconfont.red{
+        color: red;
       }
     }
 
